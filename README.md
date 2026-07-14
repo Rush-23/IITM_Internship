@@ -2,187 +2,213 @@
 
 <div align="center">
 
-## MATLAB Implementation Repository
+### Internship Project
 
-**Internship Project – Department of Electrical Engineering**  
+**Department of Electrical Engineering**  
 **Indian Institute of Technology Madras**
 
-Author: **Rushil V**  
+**Author:** Rushil V  
 B.E. Electronics and Communication Engineering  
 SSN College of Engineering
 
 ![MATLAB](https://img.shields.io/badge/MATLAB-R2026a-orange?logo=mathworks)
-![Platform](https://img.shields.io/badge/Platform-Windows-blue)
-![Domain](https://img.shields.io/badge/Domain-GNSS%20%7C%20GPS-green)
-![Focus](https://img.shields.io/badge/Focus-GPS%20Spoofing-red)
+![Python](https://img.shields.io/badge/Python-3.10-blue?logo=python)
+![GNU Radio](https://img.shields.io/badge/GNU%20Radio-3.10-green)
+![HackRF](https://img.shields.io/badge/SDR-HackRF-red)
+![GPS](https://img.shields.io/badge/GNSS-GPS-success)
+![Status](https://img.shields.io/badge/Status-Completed-brightgreen)
 
 </div>
 
 ---
 
-# 📖 Project Overview
+# 📖 Overview
 
-This repository contains the complete MATLAB implementation developed during my internship at the **Department of Electrical Engineering, Indian Institute of Technology Madras (IIT Madras)**.
+This repository contains the complete implementation developed during my internship at the **Department of Electrical Engineering, Indian Institute of Technology Madras (IIT Madras)**.
 
-The project demonstrates the complete processing chain of a simplified **GPS L1 C/A receiver**, beginning with GPS signal generation and progressing through acquisition, tracking, and GPS spoofing analysis.
+The project investigates **Global Navigation Satellite Systems (GNSS)** with a focus on **GPS L1 C/A signal generation, receiver acquisition, tracking, spoofing, and real-time experimentation using Software Defined Radio (SDR)**.
 
-The implementation was developed as a **six-stage pipeline**, allowing each subsystem to be verified independently before integration into the complete receiver.
-
----
-
-# 🎯 Objectives
-
-- ✅ Generate GPS L1 C/A signals
-- ✅ Simulate realistic GPS propagation channels
-- ✅ Perform FFT-based satellite acquisition
-- ✅ Implement DLL/FLL receiver tracking
-- ✅ Generate and inject spoofed GPS signals
-- ✅ Analyse spoofing effects on receiver acquisition and tracking
+Unlike a purely simulation-based project, this work combines **MATLAB**, **GNU Radio**, **HackRF One**, and **Python** to bridge theory and practical implementation.
 
 ---
 
-# 🗂 Repository Structure
+# 🎯 Project Objectives
+
+- Generate GPS L1 C/A signals.
+- Simulate realistic GPS propagation channels.
+- Perform FFT-based GPS signal acquisition.
+- Implement Delay Lock Loop (DLL) and Frequency Lock Loop (FLL) tracking.
+- Generate and inject spoofed GPS signals.
+- Validate concepts using GNU Radio and HackRF One.
+- Analyse real IQ recordings using Python.
+- Study receiver behaviour during GPS spoofing attacks.
+
+---
+
+# 🛠️ Technologies Used
+
+| Technology | Purpose |
+|------------|---------|
+| MATLAB | GPS signal generation, acquisition, tracking and spoofing simulation |
+| Python | IQ data analysis, spoof detection and DLL analysis |
+| GNU Radio | SDR transmit and receive flowgraphs |
+| HackRF One | Real-time RF transmission and reception |
+| BU-353N GPS Receiver | Receiver validation and experimentation |
+
+---
+
+# 📂 Repository Structure
 
 ```text
-MATLAB/
+IITM_Internship/
 │
-├── stage1.m                  # GPS Signal Generation
-├── stage2.m                  # Channel Model
-├── stage3.m                  # Signal Acquisition
-├── stage4.m                  # Acquisition Analysis
-├── stage5.m                  # Receiver Tracking (DLL/FLL)
-├── stage6.m                  # GPS Spoof Signal Injection
+├── MATLAB/
+│   ├── stage1.m
+│   ├── stage2.m
+│   ├── stage3.m
+│   ├── stage4.m
+│   ├── stage5.m
+│   ├── stage6.m
+│   └── generate_gps_prn.m
 │
-├── generate_gps_prn.m        # PRN Generator
+├── Python/
+│   ├── analyze_spoofing.py
+│   ├── receiver_dll.py
+│   └── requirements.txt
 │
-├── stage1_output.mat
-├── stage2_output.mat
-├── stage3_output.mat
-├── stage4_output.mat
-├── stage5_output.mat
-└── stage6_output.mat
+├── GNU_Radio/
+│   ├── *.grc
+│
+├── Figures/
+├── Sample_Data/
+├── Report/
+└── README.md
 ```
 
 ---
 
-# ⚙️ Software Requirements
-
-| Requirement | Version |
-|-------------|---------|
-| MATLAB | R2024b or later *(Recommended: R2026a)* |
-| Signal Processing Toolbox | Optional |
-| Communications Toolbox | Optional |
-| Parallel Computing Toolbox | Not Required |
-
----
-
-# 🚀 Execution Pipeline
-
-Run the scripts **in order**:
+# 🚀 MATLAB Workflow
 
 ```text
-Stage 1
-   │
-   ▼
-Stage 2
-   │
-   ▼
-Stage 3
-   │
-   ▼
-Stage 4
-   │
-   ▼
-Stage 5
-   │
-   ▼
-Stage 6
+Stage 1  → GPS Signal Generation
+      ↓
+Stage 2  → Channel Model
+      ↓
+Stage 3  → FFT-Based Acquisition
+      ↓
+Stage 4  → Acquisition Analysis
+      ↓
+Stage 5  → DLL/FLL Receiver Tracking
+      ↓
+Stage 6  → GPS Spoof Signal Injection
 ```
 
-Each stage generates a `.mat` file required by the next stage.
+Each MATLAB stage generates a `.mat` file used as the input to the next stage.
 
 ---
 
-# 🧩 Stage Description
+# 🐍 Python Workflow
 
-## 🟢 Stage 1 – GPS Signal Generation
-Creates a simplified GPS L1 C/A signal by generating the PRN sequence, adding navigation data, and modulating it onto the carrier.
+## analyze_spoofing.py
 
-**Output:** `stage1_output.mat`
+- Loads captured IQ data.
+- Performs PRN correlation.
+- Tracks authentic and spoofed correlation peaks.
+- Detects spoofing capture events.
+- Generates correlation, waterfall and power-margin plots.
 
----
+## receiver_dll.py
 
-## 🔵 Stage 2 – Channel Model
-Introduces:
-- Code delay
-- Doppler shift
-- Additive White Gaussian Noise (AWGN)
-
-to emulate a realistic satellite communication channel.
-
-**Output:** `stage2_output.mat`
+- Simulates the behaviour of a GPS receiver Delay Lock Loop.
+- Tracks code phase.
+- Computes receiver position error.
+- Detects lock transfer from the authentic signal to the spoofed signal.
 
 ---
 
-## 🟡 Stage 3 – Signal Acquisition
-Performs FFT-based circular correlation across code phase and Doppler bins to estimate satellite parameters.
+# 📡 SDR Experimentation
 
-**Output:** `stage3_output.mat`
+The real-time experiments were carried out using:
 
----
+- HackRF One SDR
+- GNU Radio Companion
+- GPS L1 C/A signal
+- BPSK modulation
+- Python-based IQ analysis
 
-## 🟠 Stage 4 – Acquisition Analysis
-Visualizes:
-- Acquisition heatmaps
-- Correlation peaks
-- Code-phase estimates
-- Doppler response
+Experimental workflow:
 
-**Output:** `stage4_output.mat`
-
----
-
-## 🔴 Stage 5 – Receiver Tracking
-Implements:
-- Delay Lock Loop (DLL)
-- Frequency Lock Loop (FLL)
-
-to maintain synchronization with the authentic GPS signal.
-
-**Output:** `stage5_output.mat`
-
----
-
-## 🟣 Stage 6 – GPS Spoof Signal Injection
-Generates a counterfeit GPS signal with configurable:
-- Code delay
-- Doppler frequency
-- Spoof power (0 dB, +6 dB, +15 dB)
-
-The spoofed signal is combined with the authentic signal to study receiver behaviour during spoofing attacks.
-
-**Output:** `stage6_output.mat`
+```text
+MATLAB Simulation
+        │
+        ▼
+GNU Radio Flowgraphs
+        │
+        ▼
+HackRF One Transmission
+        │
+        ▼
+Real IQ Capture
+        │
+        ▼
+Python Analysis
+        │
+        ▼
+DLL Receiver Simulation
+```
 
 ---
 
 # 📊 Expected Outputs
 
-Running the project produces:
+Running this project produces:
 
-- 📈 GPS signal waveforms
-- 📈 Acquisition correlation surfaces
-- 📈 Doppler search plots
-- 📈 DLL/FLL tracking responses
-- 📈 Spoofing acquisition heatmaps
-- 📈 Tracking performance analysis
-
-These outputs correspond to the figures presented in the internship report.
+- GPS signal generation plots
+- Acquisition correlation surfaces
+- Doppler search results
+- DLL/FLL tracking performance
+- GPS spoofing heatmaps
+- SDR transmission and reception results
+- Spoof capture analysis
+- Receiver lock-transfer analysis
+- Position error estimation
 
 ---
 
-# 📄 Related Report
+# ▶️ How to Run
 
-**Title:**  
+## MATLAB
+
+Execute the scripts in order:
+
+1. stage1.m
+2. stage2.m
+3. stage3.m
+4. stage4.m
+5. stage5.m
+6. stage6.m
+
+## Python
+
+Install dependencies:
+
+```bash
+pip install numpy scipy matplotlib
+```
+
+Run:
+
+```bash
+python analyze_spoofing.py
+python receiver_dll.py
+```
+
+---
+
+# 📄 Internship Report
+
+**Title**
+
 **GNSS Study, Real-Time Experimentation and Receiver Tracking Analysis**
 
 Department of Electrical Engineering  
@@ -196,18 +222,16 @@ Indian Institute of Technology Madras
 
 - B.E. Electronics and Communication Engineering
 - SSN College of Engineering
-- Internship at Indian Institute of Technology Madras
+- Internship at the Department of Electrical Engineering, IIT Madras
 
 ---
 
-# 📝 Notes
+# 🙏 Acknowledgements
 
-- Run the stages sequentially.
-- Do not delete intermediate `.mat` files.
-- The implementation is intended for academic and research purposes.
+I sincerely thank my internship supervisor and the Department of Electrical Engineering, IIT Madras, for providing the opportunity, guidance, and resources required to carry out this work.
 
 ---
 
 # 📜 License
 
-This repository is provided **for academic, educational, and research purposes only.**
+This repository is intended for **academic, educational, and research purposes only**.
